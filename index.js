@@ -13,28 +13,25 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 
-/* -------------------------------
-    POOL 1 → BASE DE DATOS PRODUCTS
---------------------------------*/
+/* ======================================
+   Detectar entorno (local o producción)
+====================================== */
+const isProduction = process.env.NODE_ENV === "production";
+
+/* ======================================
+   POOL PRODUCTS
+====================================== */
 const productsPool = new Pool({
-  host: process.env.PGHOST_PRODUCTS,
-  port: process.env.PGPORT_PRODUCTS,
-  user: process.env.PGUSER_PRODUCTS,
-  password: process.env.PGPASSWORD_PRODUCTS,
-  database: process.env.PGDATABASE_PRODUCTS,
-  ssl: false,
+  connectionString: process.env.DATABASE_URL_PRODUCTS,
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
-/* -------------------------------
-    POOL 2 → BASE DE DATOS USERS
---------------------------------*/
+/* ======================================
+   POOL USERS
+====================================== */
 const usersPool = new Pool({
-  host: process.env.PGHOST_USERS,
-  port: process.env.PGPORT_USERS,
-  user: process.env.PGUSER_USERS,
-  password: process.env.PGPASSWORD_USERS,
-  database: process.env.PGDATABASE_USERS,
-  ssl: false,
+  connectionString: process.env.DATABASE_URL_USERS,
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
 /* ==========================
@@ -42,7 +39,9 @@ const usersPool = new Pool({
 ==========================*/
 app.get("/api/products", async (req, res) => {
   try {
-    const result = await productsPool.query("SELECT * FROM tienda.productos");
+    const result = await productsPool.query(
+      "SELECT * FROM tienda.productos"
+    );
     res.json(result.rows);
   } catch (err) {
     console.error("❌ Error consulta productos:", err);
