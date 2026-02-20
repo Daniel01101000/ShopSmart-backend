@@ -16,24 +16,19 @@ const port = process.env.PORT || 5000;
 /* ======================================
    Detectar entorno (local o producción)
 ====================================== */
-const isProduction = process.env.NODE_ENV === "production";
 
 /* ======================================
    POOL PRODUCTS
 ====================================== */
 const productsPool = new Pool({
   connectionString: process.env.DATABASE_URL_PRODUCTS,
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
+  ssl: false,
 });
 
-/* ======================================
-   POOL USERS
-====================================== */
 const usersPool = new Pool({
   connectionString: process.env.DATABASE_URL_USERS,
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
+  ssl: false,
 });
-
 /* ==========================
    GET PRODUCTS
 ==========================*/
