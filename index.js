@@ -40,7 +40,7 @@ const usersPool = new Pool({
 app.get("/api/products", async (req, res) => {
   try {
     const result = await productsPool.query(
-      "SELECT * FROM productos"
+      "SELECT * FROM tienda.productos"
     );
     res.json(result.rows);
   } catch (err) {
