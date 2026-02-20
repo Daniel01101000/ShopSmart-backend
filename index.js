@@ -40,7 +40,7 @@ const usersPool = new Pool({
 app.get("/api/products", async (req, res) => {
   try {
     const result = await productsPool.query(
-      "SELECT * FROM tienda.productos"
+      "SELECT * FROM productos"
     );
     res.json(result.rows);
   } catch (err) {
@@ -57,7 +57,7 @@ app.post("/api/auth/signup", async (req, res) => {
 
   try {
     const checkUser = await usersPool.query(
-      "SELECT * FROM tienda.users WHERE email = $1 OR username = $2",
+      "SELECT * FROM users WHERE email = $1 OR username = $2",
       [email, username]
     );
 
@@ -70,7 +70,7 @@ app.post("/api/auth/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await usersPool.query(
-      `INSERT INTO tienda.users (username, email, password)
+      `INSERT INTO users (username, email, password)
        VALUES ($1, $2, $3)
        RETURNING id, username, email`,
       [username, email, hashedPassword]
@@ -94,7 +94,7 @@ app.post("/api/auth/login", async (req, res) => {
 
   try {
     const userResult = await usersPool.query(
-      "SELECT * FROM tienda.users WHERE email = $1",
+      "SELECT * FROM users WHERE email = $1",
       [email]
     );
 
